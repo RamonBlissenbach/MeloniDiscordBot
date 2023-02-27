@@ -14,25 +14,19 @@ import javax.security.auth.login.LoginException;
 
 public class MeloniDiscordBot {
 
-    private static JDA jda;
-
     public static void main(String[] args) throws LoginException {
-        jda = JDABuilder.createDefault("")
+        JDA jda = JDABuilder.createDefault("")
                 .setActivity(Activity.playing("Meloncity"))
+                .addEventListeners(new SlashCommandInteractionListner())
                 .build();
 
-        jda.getEventManager().register(new SlashCommandInteractionListner());
-        CommandListUpdateAction commands = jda.updateCommands();
-
-        commands.addCommands(Commands.slash("invite", "Lade den Bota auf deinen Discord Server ein."));
-        commands.addCommands(Commands.slash("info", "Informationen über den Bot."));
-        commands.addCommands(Commands.slash("wert", "Gucke wie viel Wert ein Item hat.").addOption(OptionType.STRING, "itemname", "Gebe den Item Namen an von dem du den Preis wissen möchtest.", true));
-
-        commands.queue();
+        jda.updateCommands()
+                .addCommands(Commands.slash("invite", "Lade den Bota auf deinen Discord Server ein."))
+                .addCommands(Commands.slash("info", "Informationen über den Bot."))
+                .addCommands(Commands.slash("wert", "Gucke wie viel Wert ein Item hat.")
+                        .addOption(OptionType.STRING, "itemname", "Gebe den Item Namen an von dem du den Preis wissen möchtest.", true))
+            .queue();
 
     }
 
-    public static JDA getJda() {
-        return jda;
-    }
 }
